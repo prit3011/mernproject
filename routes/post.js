@@ -7,6 +7,8 @@ const Post=mongoose.model("Post")
  router.get('/allpost',requireLogin,(req,res)=>{
     Post.find()
     .populate("postedBy","_id name")
+    .populate("comments.postedBy","_id name")
+    .sort('-createdAt')
     .then(posts=>{
         res.json({posts})
     })
@@ -18,6 +20,7 @@ const Post=mongoose.model("Post")
     Post.find({postedBy:{$in:req.user.following}})
     .populate("postedBy","_id name")
     .populate("comments.postedBy","_id name")
+    .sort('-createdAt')
     .then(posts=>{
         res.json({posts})
     })
